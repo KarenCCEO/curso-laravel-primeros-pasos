@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+
+use App\Http\Requests\Post\StoreRequest;
 use App\Models\Category;
 use App\Models\Post;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class PostController extends Controller
 {
@@ -41,10 +44,16 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
         //echo request("title");
         //echo $request->input('slug');
+
+        //$request->validate(StoreRequest::myRules());
+        //$validated = Validator::make($request->all(),StoreRequest::myRules());
+
+       // dd($validated->errors());
+       // dd($validated->fails());
         
         $data = array_merge($request->all(),['image' => '']);
 
