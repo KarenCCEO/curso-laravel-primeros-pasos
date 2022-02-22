@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Http\Request;
 
@@ -26,7 +27,12 @@ class PostController extends Controller
      */
     public function create()
     {
-        echo view('dashboard.post.create');
+
+        $categories = Category::pluck('id', 'title');
+
+       // dd($categories);
+
+        echo view('dashboard.post.create', compact('categories'));
     }
 
     /**
@@ -38,8 +44,13 @@ class PostController extends Controller
     public function store(Request $request)
     {
         //echo request("title");
-       //echo $request->input('slug');
-       dd($request->all());
+        //echo $request->input('slug');
+        
+        $data = array_merge($request->all(),['image' => '']);
+
+        dd($data);
+
+        Post::create($data);
     }
 
     /**
