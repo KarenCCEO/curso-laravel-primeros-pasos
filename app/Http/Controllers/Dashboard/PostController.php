@@ -4,11 +4,12 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 use App\Http\Requests\Post\StoreRequest;
 use App\Models\Category;
 use App\Models\Post;
-use Illuminate\Support\Facades\Validator;
 
 class PostController extends Controller
 {
@@ -19,8 +20,8 @@ class PostController extends Controller
      */
     public function index()
     {
-        echo "Index";
-        //
+        $posts = Post::get();
+        return view('dashboard.post.index',compact('posts'));
     }
 
     /**
@@ -55,11 +56,15 @@ class PostController extends Controller
        // dd($validated->errors());
        // dd($validated->fails());
         
-        $data = array_merge($request->all(),['image' => '']);
+        //$data = array_merge($request->all(),['image' => '']);
 
-        dd($data);
+       // dd($data);
 
-        Post::create($data);
+    //    $data = $request->validated();
+    //    $data['slug']= Str::slug($data['title']);
+    //    dd($data);
+
+        Post::create($request->validated());
     }
 
     /**
