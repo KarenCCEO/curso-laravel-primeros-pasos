@@ -3,10 +3,8 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
 
+use App\Http\Requests\Post\PutRequest;
 use App\Http\Requests\Post\StoreRequest;
 use App\Models\Category;
 use App\Models\Post;
@@ -20,8 +18,9 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::get();
-        return view('dashboard.post.index',compact('posts'));
+        $posts = Post::paginate(2);
+
+        return view('dashboard.post.index', compact('posts'));
     }
 
     /**
@@ -34,7 +33,7 @@ class PostController extends Controller
 
         $categories = Category::pluck('id', 'title');
 
-       // dd($categories);
+        // dd($categories);
 
         echo view('dashboard.post.create', compact('categories'));
     }
@@ -53,16 +52,16 @@ class PostController extends Controller
         //$request->validate(StoreRequest::myRules());
         //$validated = Validator::make($request->all(),StoreRequest::myRules());
 
-       // dd($validated->errors());
-       // dd($validated->fails());
-        
+        // dd($validated->errors());
+        // dd($validated->fails());
+
         //$data = array_merge($request->all(),['image' => '']);
 
-       // dd($data);
+        // dd($data);
 
-    //    $data = $request->validated();
-    //    $data['slug']= Str::slug($data['title']);
-    //    dd($data);
+        //    $data = $request->validated();
+        //    $data['slug']= Str::slug($data['title']);
+        //    dd($data);
 
         Post::create($request->validated());
     }
@@ -75,7 +74,7 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+        echo "show";
     }
 
     /**
@@ -86,7 +85,8 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        //
+        $categories = Category::pluck('id', 'title');
+        echo view('dashboard.post.edit', compact('categories', 'post'));
     }
 
     /**
@@ -96,9 +96,9 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $post)
+    public function update(PutRequest $request, Post $post)
     {
-        //
+        $post->update($request->validated());
     }
 
     /**
@@ -109,6 +109,6 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        echo "destroy";
     }
 }
