@@ -68,7 +68,7 @@ class PostController extends Controller
         //return route("post.create");
         //return redirect("/post/create");
         //return redirect()->route("post.create");
-        return to_route("post.index");
+        return to_route("post.index")->with('status',"Registro creado.");;
     }
 
     /**
@@ -103,8 +103,18 @@ class PostController extends Controller
      */
     public function update(PutRequest $request, Post $post)
     {
-        $post->update($request->validated());
-        return to_route("post.index");
+        
+        $data = $request->validated();
+        if( isset($data["image"])){
+            $data["image"] = $filename = time().".".$data["image"]->extension();
+
+            $request->image->move(public_path("image/otro"), $filename);
+            
+        }
+
+        $post->update($data);
+        //$request->session()->flash('status',"Registro actualizado.");
+        return to_route("post.index")->with('status',"Registro actualizado.");
     }
 
     /**
@@ -116,6 +126,6 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         $post->delete();
-        return to_route("post.index");
+        return to_route("post.index")->with('status',"Registro eliminado.");
     }
 }
