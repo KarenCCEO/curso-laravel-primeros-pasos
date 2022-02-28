@@ -11,9 +11,7 @@
 
     <h1>Bienvenido</h1>
 
-    <a href="/contacto">Contacto</a>
-    <br>
-    <a href="{{ route('contacto') }}">Contacto (Ruta con nombre)</a>
+
     
 
 </body>
