@@ -33,7 +33,9 @@
 
                 
                 <div class="container">
-                    @yield('content')
+                    <div class="card card-white mt-4">
+                        @yield('content')
+                    </div>
                 </div>
 
         </div>
