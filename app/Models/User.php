@@ -45,10 +45,10 @@ class User extends Authenticatable
 
     public function isAdmin()
     {
-        $this->rol == "admin";
+        return $this->rol == "admin";
     }
     public function isRegular()
     {
-        $this->rol == "regular";
+        return $this->rol == "regular";
     }
 }
