@@ -20,6 +20,11 @@ class PostController extends Controller
        return response()->json(Post::paginate(10));
     }
 
+    public function all()
+    {
+       return response()->json(Post::get());
+    }
+
   
 
  
