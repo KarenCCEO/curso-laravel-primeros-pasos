@@ -21,6 +21,7 @@ class CategoryController extends Controller
         return response()->json(Category::get());
     }
 
+    
     public function slug($slug)
     {
        $category = Category::where("slug", $slug)->firstOrFail();
