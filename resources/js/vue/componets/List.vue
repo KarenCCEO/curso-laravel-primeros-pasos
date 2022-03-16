@@ -2,7 +2,10 @@
   <div>
     <h1>Listado de Post</h1>
 
-    <o-table :loading="isLoading" :data="posts.length == 0 ? [] : posts">
+    <o-table
+      :loading="isLoading"
+      :data="posts.current_page && posts.data.length == 0 ? [] : posts.data"
+    >
       <o-table-column field="id" label="ID" numeric v-slot="p">
         {{ p.row.id }}
       </o-table-column>
@@ -19,6 +22,23 @@
         {{ p.row.category.title }}
       </o-table-column>
     </o-table>
+
+    <br />
+
+    <o-pagination
+      v-if="posts.current_page && posts.data.length > 0"
+      @change="updatePage"
+      :total="posts.total"
+      v-model:current="currentPage"
+      :range-before="2"
+      :range-after="2"
+      order="centered"
+      size="small"
+      :simple="false"
+      :rounded="true"
+      :per-page="posts.per_page"
+    >
+    </o-pagination>
   </div>
 </template>
 
@@ -28,15 +48,26 @@ export default {
     return {
       posts: [],
       isLoading: true,
+      currentPage:1,
     };
   },
+methods: {
 
-  async mounted() {
-    this.$axios.get("/api/post").then((res) => {
-      this.posts = res.data.data;
+  updatePage(){
+    setTimeout(this.listPage, 100);
+  },
+
+  listPage(){
+    this.isLoading = true;
+     this.$axios.get("/api/post?page="+this.currentPage).then((res) => {
+      this.posts = res.data;
       console.log(this.posts);
       this.isLoading = false;
     });
+  }
+},
+  async mounted() {
+   this.listPage()
   },
 };
 </script>
