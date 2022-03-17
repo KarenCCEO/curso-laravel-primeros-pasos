@@ -1,15 +1,5 @@
 <template>
     <div>
-        <list/>
+        <router-view></router-view>
     </div>
 </template>
-
-<script>
-
-import List from "./componets/List";
-export default {
-    components:{
-        List
-    }
-}
-</script>

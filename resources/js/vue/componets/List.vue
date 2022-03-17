@@ -2,6 +2,8 @@
   <div>
     <h1>Listado de Post</h1>
 
+    <router-link :to="{name:'save'}">Crear</router-link>
+
     <o-table
       :loading="isLoading"
       :data="posts.current_page && posts.data.length == 0 ? [] : posts.data"
@@ -20,6 +22,9 @@
       </o-table-column>
       <o-table-column field="category" label="Categoría" v-slot="p">
         {{ p.row.category.title }}
+      </o-table-column>
+      <o-table-column field="slug" label="Acciones" v-slot="p">
+        <router-link :to="{name:'save', params:{ 'slug': p.row.slug}}">Editar</router-link>
       </o-table-column>
     </o-table>
 
