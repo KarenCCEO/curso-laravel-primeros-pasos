@@ -21648,6 +21648,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         console.log(_this.posts);
         _this.isLoading = false;
       });
+    },
+    deletePost: function deletePost(row) {
+      this.posts.data.splice(row.index, 1);
+      console.log(row);
+      this.$axios["delete"]("/api/post/" + row.row.id);
     }
   },
   mounted: function mounted() {
@@ -21683,6 +21688,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -21700,11 +21713,39 @@ __webpack_require__.r(__webpack_exports__);
         content: "",
         category_id: "",
         posted: ""
-      }
+      },
+      post: ""
     };
   },
   mounted: function mounted() {
-    this.getCategory();
+    var _this = this;
+
+    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              if (!_this.$route.params.slug) {
+                _context.next = 4;
+                break;
+              }
+
+              _context.next = 3;
+              return _this.getPost();
+
+            case 3:
+              _this.initPost();
+
+            case 4:
+              _this.getCategory();
+
+            case 5:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }))();
   },
   methods: {
     cleanErrorsForm: function cleanErrorsForm() {
@@ -21715,27 +21756,67 @@ __webpack_require__.r(__webpack_exports__);
       this.errors.posted = "";
     },
     submit: function submit() {
-      var _this = this;
+      var _this2 = this;
 
-      console.log(this.form);
       this.cleanErrorsForm();
-      this.$axios.post("/api/post", this.form).then(function (res) {
+      if (this.post == "") return this.$axios.post("/api/post", this.form).then(function (res) {
         console.log(res);
       })["catch"](function (error) {
         console.log(error.response.data);
-        if (error.response.data.title) _this.errors.title = error.response.data.title[0];
-        if (error.response.data.description) _this.errors.description = error.response.data.description[0];
-        if (error.response.data.category_id) _this.errors.category_id = error.response.data.category_id[0];
-        if (error.response.data.posted) _this.errors.posted = error.response.data.posted[0];
-        if (error.response.data.content) _this.errors.content = error.response.data.content[0];
+        if (error.response.data.title) _this2.errors.title = error.response.data.title[0];
+        if (error.response.data.description) _this2.errors.description = error.response.data.description[0];
+        if (error.response.data.category_id) _this2.errors.category_id = error.response.data.category_id[0];
+        if (error.response.data.posted) _this2.errors.posted = error.response.data.posted[0];
+        if (error.response.data.content) _this2.errors.content = error.response.data.content[0];
+      }); // actualizar
+
+      this.$axios.patch("/api/post/" + this.post.id, this.form).then(function (res) {
+        console.log(res);
+      })["catch"](function (error) {
+        console.log(error.response.data);
+        if (error.response.data.title) _this2.errors.title = error.response.data.title[0];
+        if (error.response.data.description) _this2.errors.description = error.response.data.description[0];
+        if (error.response.data.category_id) _this2.errors.category_id = error.response.data.category_id[0];
+        if (error.response.data.posted) _this2.errors.posted = error.response.data.posted[0];
+        if (error.response.data.content) _this2.errors.content = error.response.data.content[0];
       });
     },
     getCategory: function getCategory() {
-      var _this2 = this;
+      var _this3 = this;
 
       this.$axios.get("/api/category/all").then(function (res) {
-        _this2.categories = res.data;
+        _this3.categories = res.data;
       });
+    },
+    getPost: function getPost() {
+      var _this4 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.next = 2;
+                return _this4.$axios.get("/api/post/slug/" + _this4.$route.params.slug);
+
+              case 2:
+                _this4.post = _context2.sent;
+                _this4.post = _this4.post.data;
+
+              case 4:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }))();
+    },
+    initPost: function initPost() {
+      this.form.title = this.post.title;
+      this.form.description = this.post.description;
+      this.form.content = this.post.content;
+      this.form.category_id = this.post.category_id;
+      this.form.posted = this.post.posted;
     }
   }
 });
@@ -21785,7 +21866,9 @@ var _hoisted_2 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNod
 
 var _hoisted_3 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Editar");
 
-var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
+var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Eliminar");
+
+var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
 /* HOISTED */
 );
 
@@ -21793,6 +21876,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_router_link = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("router-link");
 
   var _component_o_table_column = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("o-table-column");
+
+  var _component_o_button = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("o-button");
 
   var _component_o_table = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("o-table");
 
@@ -21884,7 +21969,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             to: {
               name: 'save',
               params: {
-                'slug': p.row.slug
+                slug: p.row.slug
               }
             }
           }, {
@@ -21896,7 +21981,21 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
           }, 1032
           /* PROPS, DYNAMIC_SLOTS */
-          , ["to"])];
+          , ["to"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_o_button, {
+            variant: "danger",
+            onClick: function onClick($event) {
+              return $options.deletePost(p);
+            }
+          }, {
+            "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+              return [_hoisted_4];
+            }),
+            _: 2
+            /* DYNAMIC */
+
+          }, 1032
+          /* PROPS, DYNAMIC_SLOTS */
+          , ["onClick"])];
         }),
         _: 1
         /* STABLE */
@@ -21908,7 +22007,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
   }, 8
   /* PROPS */
-  , ["loading", "data"]), _hoisted_4, $data.posts.current_page && $data.posts.data.length > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_o_pagination, {
+  , ["loading", "data"]), _hoisted_5, $data.posts.current_page && $data.posts.data.length > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_o_pagination, {
     key: 0,
     onChange: $options.updatePage,
     total: $data.posts.total,
@@ -22142,7 +22241,7 @@ var routes = [{
   component: _componets_List__WEBPACK_IMPORTED_MODULE_0__["default"]
 }, {
   name: 'save',
-  path: '/vue/save',
+  path: '/vue/save/:slug?',
   component: _componets_Save__WEBPACK_IMPORTED_MODULE_1__["default"]
 }];
 var router = (0,vue_router__WEBPACK_IMPORTED_MODULE_2__.createRouter)({

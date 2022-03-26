@@ -47,10 +47,15 @@ export default {
         content:"",
         category_id:"",
         posted:"",
-      }
+      },
+      post:""
     };
   },
-  mounted() {
+  async mounted() {
+    if(this.$route.params.slug){
+      await this.getPost();
+      this.initPost();
+    }
     this.getCategory();
   },
   methods: {
@@ -62,11 +67,36 @@ export default {
       this.errors.posted = ""
     },
     submit(){
-      console.log(this.form)
 
       this.cleanErrorsForm()
 
-      this.$axios.post("/api/post",
+    if(this.post == "")
+
+      return this.$axios.post("/api/post",
+        this.form
+      ).then(res => {
+        console.log(res)
+      }).catch(error =>{
+        console.log(error.response.data)
+
+        if(error.response.data.title)
+          this.errors.title = error.response.data.title[0]
+          
+        if(error.response.data.description)
+          this.errors.description = error.response.data.description[0]
+
+        if(error.response.data.category_id)
+          this.errors.category_id = error.response.data.category_id[0]
+
+        if(error.response.data.posted)
+          this.errors.posted = error.response.data.posted[0]
+
+        if(error.response.data.content)
+          this.errors.content = error.response.data.content[0]
+
+      })
+      // actualizar
+      this.$axios.patch("/api/post/"+this.post.id,
         this.form
       ).then(res => {
         console.log(res)
@@ -95,6 +125,17 @@ export default {
         this.categories = res.data;
       });
     },
+    async getPost() {
+      this.post = await this.$axios.get("/api/post/slug/"+this.$route.params.slug);
+      this.post = this.post.data
+    },
+    initPost(){
+      this.form.title = this.post.title
+      this.form.description = this.post.description
+      this.form.content = this.post.content
+      this.form.category_id = this.post.category_id
+      this.form.posted = this.post.posted
+    }
   },
 };
 </script>

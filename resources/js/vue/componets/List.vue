@@ -2,7 +2,7 @@
   <div>
     <h1>Listado de Post</h1>
 
-    <router-link :to="{name:'save'}">Crear</router-link>
+    <router-link :to="{ name: 'save' }">Crear</router-link>
 
     <o-table
       :loading="isLoading"
@@ -24,7 +24,13 @@
         {{ p.row.category.title }}
       </o-table-column>
       <o-table-column field="slug" label="Acciones" v-slot="p">
-        <router-link :to="{name:'save', params:{ 'slug': p.row.slug}}">Editar</router-link>
+        <router-link :to="{ name: 'save', params: { slug: p.row.slug } }"
+          >Editar</router-link
+        >
+
+        <o-button variant="danger" @click="deletePost(p)"
+          >Eliminar</o-button
+        >
       </o-table-column>
     </o-table>
 
@@ -53,26 +59,31 @@ export default {
     return {
       posts: [],
       isLoading: true,
-      currentPage:1,
+      currentPage: 1,
     };
   },
-methods: {
+  methods: {
+    updatePage() {
+      setTimeout(this.listPage, 100);
+    },
 
-  updatePage(){
-    setTimeout(this.listPage, 100);
+    listPage() {
+      this.isLoading = true;
+      this.$axios.get("/api/post?page=" + this.currentPage).then((res) => {
+        this.posts = res.data;
+        console.log(this.posts);
+        this.isLoading = false;
+      });
+    },
+    deletePost(row) {
+      this.posts.data.splice(row.index,1)
+      console.log(row);
+      this.$axios.delete("/api/post/"+row.row.id);
+    },
   },
 
-  listPage(){
-    this.isLoading = true;
-     this.$axios.get("/api/post?page="+this.currentPage).then((res) => {
-      this.posts = res.data;
-      console.log(this.posts);
-      this.isLoading = false;
-    });
-  }
-},
   async mounted() {
-   this.listPage()
+    this.listPage();
   },
 };
 </script>
