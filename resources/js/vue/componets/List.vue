@@ -2,7 +2,9 @@
   <div>
     <h1>Listado de Post</h1>
 
-    <router-link :to="{ name: 'save' }">Crear</router-link>
+    <o-button iconLeft="plus" @click="$router.push({ name: 'save' })" >Crear</o-button>
+
+<div class="mb-5" ></div>
 
     <o-table
       :loading="isLoading"
@@ -24,11 +26,11 @@
         {{ p.row.category.title }}
       </o-table-column>
       <o-table-column field="slug" label="Acciones" v-slot="p">
-        <router-link :to="{ name: 'save', params: { slug: p.row.slug } }"
+        <router-link class="mr-3" :to="{ name: 'save', params: { slug: p.row.slug } }"
           >Editar</router-link
         >
 
-        <o-button variant="danger" @click="deletePost(p)"
+        <o-button iconLeft="delete" rounded size="small" variant="danger" @click="deletePost(p)"
           >Eliminar</o-button
         >
       </o-table-column>

@@ -6,11 +6,16 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Vue</title>
 
+    <link rel="stylesheet" href="{{ asset('css/vue.css') }}">
+    
     
 </head>
 <body>
     
-    <div id="app"></div>
+    <div class="container">
+        <div id="app"></div>
+    </div>
+
     <script src="{{ asset('js/main.js') }}"></script>
 
 </body>
