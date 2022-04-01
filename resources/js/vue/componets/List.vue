@@ -1,10 +1,23 @@
 <template>
   <div>
+    <o-modal v-model:active="confirmDeleteActive">
+      <div class="p-4">
+        <p>¿Seguro que quieres eliminar el registro selecionado?</p>
+      </div>
+
+      <div class="flex flex-row-reverse gap-2 bg-gray-100 p-3">
+        <o-button variant="danger" @click="deletePost()">Eliminar</o-button>
+        <o-button @click="confirmDeleteActive = false">Cancelar</o-button>
+      </div>
+    </o-modal>
+
     <h1>Listado de Post</h1>
 
-    <o-button iconLeft="plus" @click="$router.push({ name: 'save' })" >Crear</o-button>
+    <o-button iconLeft="plus" @click="$router.push({ name: 'save' })"
+      >Crear</o-button
+    >
 
-<div class="mb-5" ></div>
+    <div class="mb-5"></div>
 
     <o-table
       :loading="isLoading"
@@ -26,11 +39,21 @@
         {{ p.row.category.title }}
       </o-table-column>
       <o-table-column field="slug" label="Acciones" v-slot="p">
-        <router-link class="mr-3" :to="{ name: 'save', params: { slug: p.row.slug } }"
+        <router-link
+          class="mr-3"
+          :to="{ name: 'save', params: { slug: p.row.slug } }"
           >Editar</router-link
         >
 
-        <o-button iconLeft="delete" rounded size="small" variant="danger" @click="deletePost(p)"
+        <o-button
+          iconLeft="delete"
+          rounded
+          size="small"
+          variant="danger"
+          @click="
+            deletePostRow = p;
+            confirmDeleteActive = true;
+          "
           >Eliminar</o-button
         >
       </o-table-column>
@@ -62,6 +85,8 @@ export default {
       posts: [],
       isLoading: true,
       currentPage: 1,
+      confirmDeleteActive: false,
+      deletePostRow: "",
     };
   },
   methods: {
@@ -77,10 +102,17 @@ export default {
         this.isLoading = false;
       });
     },
-    deletePost(row) {
-      this.posts.data.splice(row.index,1)
-      console.log(row);
-      this.$axios.delete("/api/post/"+row.row.id);
+    deletePost() {
+      this.confirmDeleteActive = false;
+      this.posts.data.splice(this.deletePostRow.index, 1);
+      this.$axios.delete("/api/post/" + this.deletePostRow.row.id);
+      this.$oruga.notification.open({
+        message: "Registro eliminado",
+        position: "bottom-right",
+        variant: "danger",
+        duration: 4000,
+        closable: true,
+      });
     },
   },
 

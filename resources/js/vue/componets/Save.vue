@@ -1,7 +1,8 @@
 <template>
-
-  <h1 v-if="post">Actualizar Post <span class="font-bold">{{post.title}}</span></h1>
-  <h1 v-else>Crear Post </h1>
+  <h1 v-if="post">
+    Actualizar Post <span class="font-bold">{{ post.title }}</span>
+  </h1>
+  <h1 v-else>Crear Post</h1>
 
   <form @submit.prevent="submit">
     <div class="grid grid-cols-2 gap-3">
@@ -22,7 +23,7 @@
       >
         <o-input v-model="form.description" type="textarea" value=""></o-input>
       </o-field>
-      
+
       <o-field
         :variant="errors.content ? 'danger' : 'primary'"
         :message="errors.content"
@@ -103,7 +104,12 @@ export default {
         return this.$axios
           .post("/api/post", this.form)
           .then((res) => {
-            console.log(res);
+            this.$oruga.notification.open({
+              message: "Registro procesado con éxito",
+              position: "bottom-right",
+              duration: 4000,
+              closable: true,
+            });
           })
           .catch((error) => {
             console.log(error.response.data);
@@ -127,7 +133,12 @@ export default {
       this.$axios
         .patch("/api/post/" + this.post.id, this.form)
         .then((res) => {
-          console.log(res);
+                      this.$oruga.notification.open({
+              message: "Registro procesado con éxito",
+              position: "bottom-right",
+              duration: 4000,
+              closable: true,
+            });
         })
         .catch((error) => {
           console.log(error.response.data);

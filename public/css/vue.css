@@ -649,9 +649,6 @@ select {
 .z-50 {
   z-index: 50;
 }
-.col-span-4 {
-  grid-column: span 4 / span 4;
-}
 .col-span-2 {
   grid-column: span 2 / span 2;
 }
@@ -845,6 +842,9 @@ select {
 .grid-cols-2 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
+.flex-row-reverse {
+  flex-direction: row-reverse;
+}
 .flex-col {
   flex-direction: column;
 }
@@ -862,6 +862,9 @@ select {
 }
 .justify-items-center {
   justify-items: center;
+}
+.gap-2 {
+  gap: 0.5rem;
 }
 .gap-3 {
   gap: 0.75rem;
@@ -958,6 +961,12 @@ select {
 }
 .p-2 {
   padding: 0.5rem;
+}
+.p-4 {
+  padding: 1rem;
+}
+.p-3 {
+  padding: 0.75rem;
 }
 .px-4 {
   padding-left: 1rem;
@@ -1208,6 +1217,9 @@ h1 {
   text-align: center;
   font-size: 1.875rem;
   line-height: 2.25rem;
+}
+:root{
+
 }
 .hover\:border-gray-300:hover {
   --tw-border-opacity: 1;
