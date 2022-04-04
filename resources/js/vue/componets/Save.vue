@@ -55,7 +55,19 @@
           <option value="not">No</option>
         </o-select>
       </o-field>
+
+      <div class="flex gap-2" v-if="post">
+        <o-upload v-model="file">
+          <o-button tag="a" variant="primary">
+            <o-icon icon="upload"></o-icon>
+            <span>Click para cargar</span>
+          </o-button>
+        </o-upload>
+
+        <o-button icon-left="upload" @click="upload"> Subir </o-button>
+      </div>
     </div>
+    <br />
     <o-button variant="primary" native-type="submit">Enviar</o-button>
   </form>
 </template>
@@ -80,6 +92,7 @@ export default {
         posted: "",
       },
       post: "",
+      file: null,
     };
   },
   async mounted() {
@@ -133,12 +146,12 @@ export default {
       this.$axios
         .patch("/api/post/" + this.post.id, this.form)
         .then((res) => {
-                      this.$oruga.notification.open({
-              message: "Registro procesado con éxito",
-              position: "bottom-right",
-              duration: 4000,
-              closable: true,
-            });
+          this.$oruga.notification.open({
+            message: "Registro procesado con éxito",
+            position: "bottom-right",
+            duration: 4000,
+            closable: true,
+          });
         })
         .catch((error) => {
           console.log(error.response.data);
@@ -157,6 +170,24 @@ export default {
 
           if (error.response.data.content)
             this.errors.content = error.response.data.content[0];
+        });
+    },
+    upload() {
+      //return console.log(this.file)
+
+      const formData = new FormData()
+      formData.append("image",this.file)
+      this.$axios
+        .post("/api/post/upload/" + this.post.id, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((error) => {
+          console.log(error);
         });
     },
     getCategory() {
