@@ -57,14 +57,28 @@
       </o-field>
 
       <div class="flex gap-2" v-if="post">
-        <o-upload v-model="file">
-          <o-button tag="a" variant="primary">
-            <o-icon icon="upload"></o-icon>
-            <span>Click para cargar</span>
-          </o-button>
-        </o-upload>
-
+        <o-field :message="fileError">
+          <o-upload v-model="file">
+            <o-button tag="a" variant="primary">
+              <o-icon icon="upload"></o-icon>
+              <span>Click para cargar</span>
+            </o-button>
+          </o-upload>
+        </o-field>
         <o-button icon-left="upload" @click="upload"> Subir </o-button>
+      </div>
+      <div class="flex gap-2" v-if="post">
+        <o-field :message="fileError">
+          <o-upload v-model="filesDaD" multiple drag-drop>
+            <section>
+              <o-icon icon="upload"></o-icon>
+              <span>Drag and Drop para cargar archivos</span>
+            </section>
+          </o-upload>
+        </o-field>
+        <span v-for="(file, index) in filesDaD" :key="index">
+          {{ file.name }}
+        </span>
       </div>
     </div>
     <br />
@@ -93,6 +107,8 @@ export default {
       },
       post: "",
       file: null,
+      filesDaD: [],
+      fileError: "",
     };
   },
   async mounted() {
@@ -174,9 +190,9 @@ export default {
     },
     upload() {
       //return console.log(this.file)
-
-      const formData = new FormData()
-      formData.append("image",this.file)
+      this.fileError = ""
+      const formData = new FormData();
+      formData.append("image", this.file);
       this.$axios
         .post("/api/post/upload/" + this.post.id, formData, {
           headers: {
@@ -187,7 +203,7 @@ export default {
           console.log(res);
         })
         .catch((error) => {
-          console.log(error);
+          this.fileError = error.response.data.message;
         });
     },
     getCategory() {
@@ -207,6 +223,29 @@ export default {
       this.form.content = this.post.content;
       this.form.category_id = this.post.category_id;
       this.form.posted = this.post.posted;
+    },
+  },
+  watch: {
+    filesDaD: {
+      handler(val) {
+        //return console.log(val[val.length - 1]);
+        this.fileError = ""
+        const formData = new FormData();
+        formData.append("image", val[val.length - 1]);
+        this.$axios
+          .post("/api/post/upload/" + this.post.id, formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((error) => {
+            this.fileError = error.response.data.message;
+          });
+      },
+      deep: true,
     },
   },
 };
