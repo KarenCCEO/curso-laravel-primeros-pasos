@@ -25,3 +25,5 @@ mix
     require('tailwindcss'),
     require('autoprefixer'),
 ]);
+
+mix.browserSync('laraprimerospasos.test');
